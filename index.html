@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>分枱紙自動生成器 - 營地 / 餐廳 A4 列印工具</title>
-  <!-- 載入楷體網頁字體作為手機／無內置標楷體裝置的後備字體 -->
+  <!-- 載入楷體網頁字體，作為手機或無內置標楷體裝置的後備字體 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&display=swap" rel="stylesheet">
@@ -30,7 +30,7 @@
     };
   </script>
   <style>
-    /* 全局字體：優先選用香港繁體及清晰無襯線字體 */
+    /* 全局介面字體 */
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang HK", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
       background-color: #f1f5f9;
@@ -38,7 +38,7 @@
       overflow-x: hidden;
     }
 
-    /* 螢幕預覽縮放外框（防止手機或窄視窗出現橫向捲動） */
+    /* 螢幕預覽縮放外框（避免手機或窄螢幕橫向爆版） */
     .preview-scale-wrapper {
       width: 100%;
       display: flex;
@@ -49,7 +49,7 @@
 
     .a4-page-slot {
       position: relative;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
 
     /* A4 紙張實體尺寸（直向 210mm x 297mm） */
@@ -102,21 +102,12 @@
       word-break: break-word;
     }
 
-    /* 一版四格（A6 比例）加大留白，貼合原版直身卡片視覺 */
+    /* 一版四格（A6 比例）加大留白，貼合實物比例 */
     .grid-2x2 .table-card {
       padding: 26px 20px 24px 20px;
     }
 
-    /* 框線樣式：使用邊框重疊處理，避免中間格線變粗 */
-    .border-dashed-style {
-      border-top: 1px dashed #64748b;
-      border-left: 1px dashed #64748b;
-    }
-    .border-dashed-style .table-card {
-      border-right: 1px dashed #64748b;
-      border-bottom: 1px dashed #64748b;
-    }
-
+    /* 框線樣式：邊框共用，避免中間格線變雙倍粗 */
     .border-solid-style {
       border-top: 1px solid #1f2937;
       border-left: 1px solid #1f2937;
@@ -126,11 +117,20 @@
       border-bottom: 1px solid #1f2937;
     }
 
+    .border-dashed-style {
+      border-top: 1px dashed #64748b;
+      border-left: 1px dashed #64748b;
+    }
+    .border-dashed-style .table-card {
+      border-right: 1px dashed #64748b;
+      border-bottom: 1px dashed #64748b;
+    }
+
     .border-none-style .table-card {
       border: 1px solid transparent;
     }
 
-    /* 卡片文字層級（還原圖片：頂部標題、中間日期獨立加粗換行配餐次、底部人數上限） */
+    /* 卡片文字層級（頂部團體名、中間日期獨立加粗配餐次、底部人數上限） */
     .card-header {
       width: 100%;
     }
@@ -144,7 +144,7 @@
     }
 
     .card-badges {
-      font-size: calc(var(--card-font-size, 21px) * 1.02);
+      font-size: calc(var(--card-font-size, 21px) * 1.0);
       font-weight: 500;
       line-height: 1.35;
       letter-spacing: 0.04em;
@@ -201,7 +201,7 @@
       color: #111827;
     }
 
-    /* 頁碼角標（只喺螢幕預覽顯示） */
+    /* 頁碼標籤（僅在螢幕預覽顯示） */
     .page-label {
       position: absolute;
       top: -24px;
@@ -282,7 +282,7 @@
         </div>
         <div>
           <h1 class="text-base sm:text-lg font-bold tracking-tight leading-tight">分枱紙自動生成器</h1>
-          <p class="text-[11px] text-slate-400">自動拆解全圍／半圍・A4 鎖定格數列印</p>
+          <p class="text-[11px] text-slate-400">自動拆解全圍／半圍・A4 一版四格標楷體列印</p>
         </div>
       </div>
 
@@ -313,7 +313,7 @@
   <!-- 次級版面設定控制列（列印時隱藏） -->
   <div class="no-print bg-slate-800 text-slate-200 border-b border-slate-700 px-4 py-2.5 text-sm">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-      <div class="flex flex-wrap items-center gap-4 sm:gap-6">
+      <div class="flex flex-wrap items-center gap-4 sm:gap-5">
         <!-- 每頁格數 -->
         <div class="flex items-center gap-2">
           <label for="layout-grid-select" class="text-slate-400 text-xs font-medium">每頁格數:</label>
@@ -353,12 +353,159 @@
       </div>
 
       <!-- 資料維護按鈕 -->
-<!-- ... existing code ... */
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="confirmLoadDemo()" class="text-xs px-3 py-1.5 rounded-md bg-slate-700 hover:bg-slate-600 text-slate-100 transition">
+          載入示範資料
+        </button>
+        <button type="button" onclick="confirmClearAll()" class="text-xs px-3 py-1.5 rounded-md bg-rose-900/60 hover:bg-rose-800 text-rose-100 border border-rose-700/60 transition">
+          清空全部
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主體工作區：左側輸入與清單 / 右側即時 A4 預覽 -->
+  <main class="main-layout flex-1 max-w-7xl w-full mx-auto px-4 py-5 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- 左側操作欄（列印時隱藏） -->
+    <section class="no-print lg:col-span-5 flex flex-col gap-5">
+      <!-- 模式切換頁籤 -->
+      <div class="bg-white p-1.5 rounded-xl shadow-sm border border-slate-200 flex gap-1 text-xs sm:text-sm font-semibold">
+        <button type="button" id="tab-btn-form" onclick="switchTab('form')" class="flex-1 py-2 text-center rounded-lg transition bg-brand-600 text-white shadow-sm">
+          ✏️ 單筆輸入／編輯
+        </button>
+        <button type="button" id="tab-btn-batch" onclick="switchTab('batch')" class="flex-1 py-2 text-center rounded-lg transition text-slate-600 hover:bg-slate-100">
+          📋 批量文字匯入
+        </button>
+      </div>
+
+      <!-- 分頁 1：單筆團體表單 -->
+      <div id="tab-content-form" class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 flex flex-col gap-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+          <h2 id="form-title" class="font-bold text-slate-800 text-base">新增團體分枱紙</h2>
+          <button type="button" id="cancel-edit-btn" onclick="resetForm()" class="hidden text-xs text-slate-500 hover:text-slate-800 underline">
+            取消編輯
+          </button>
+        </div>
+
+        <!-- 團體名稱 -->
+        <div>
+          <label for="group-name-input" class="block text-xs font-semibold text-slate-700 mb-1">
+            團體名稱 <span class="text-rose-500">*</span>
+          </label>
+          <input type="text" id="group-name-input" placeholder="例如：基督中心堂（荃灣）" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+        </div>
+
+        <!-- 枱數與自動拆解預覽 + 特別標記 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="group-tables-input" class="block text-xs font-semibold text-slate-700 mb-1">
+              總枱數（輸入 .5 自動拆半圍） <span class="text-rose-500">*</span>
+            </label>
+            <input type="number" id="group-tables-input" step="0.5" min="0.5" value="4" oninput="updateSplitPreview()" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+            <div id="split-preview-badge" class="mt-1.5 text-[11px] font-medium text-brand-700 bg-brand-50 px-2 py-1 rounded border border-brand-100">
+              將生成：4 張全圍（限最多8人）
+            </div>
+          </div>
+
+          <div>
+            <label for="group-tag-input" class="block text-xs font-semibold text-slate-700 mb-1">
+              特別標記（選填，可換行）
+            </label>
+            <textarea id="group-tag-input" rows="2" placeholder="例如：（西）&#10;Vegetables" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"></textarea>
+          </div>
+        </div>
+
+        <!-- 跨日餐次設定 -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-semibold text-slate-700">日期及餐次明細</label>
+            <button type="button" onclick="addDayRow()" class="text-xs font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 px-2.5 py-1 rounded-md border border-brand-200 transition">
+              ＋ 加多一日
+            </button>
+          </div>
+          <div id="days-container" class="flex flex-col gap-2.5"></div>
+        </div>
+
+        <!-- 儲存按鈕 -->
+        <div class="flex gap-2 pt-2 border-t border-slate-100">
+          <button type="button" id="submit-group-btn" onclick="saveGroup()" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm py-2.5 rounded-lg shadow-sm transition active:scale-[0.99]">
+            加入分枱清單
+          </button>
+          <button type="button" onclick="resetForm()" class="px-4 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition">
+            重設
+          </button>
+        </div>
+      </div>
+
+      <!-- 分頁 2：批量文字匯入 -->
+      <div id="tab-content-batch" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <h2 class="font-bold text-slate-800 text-base">批量貼上文字匯入</h2>
+          <button type="button" onclick="fillBatchExample()" class="text-xs text-brand-600 hover:underline font-medium">
+            填入範例格式
+          </button>
+        </div>
+        <p class="text-xs text-slate-500 leading-relaxed">
+          每行一個團體，用 <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-slate-700">|</code> 分隔：<br>
+          <code class="text-[11px] text-slate-700">團體名 | 總枱數 | 日期 餐次; 日期 餐次 | 標記(選填)</code>
+        </p>
+        <textarea id="batch-textarea" rows="7" placeholder="基督中心堂（荃灣） | 4 | 24/12 晚; 25/12 早午; 26/12 早午&#10;基督教復興教會 | 6.5 | 28/11 晚; 29/11 早午&#10;Dragonfly_2 | 0.5 | 2/12 午晚素; 3/12 早BBQ素 | （西）" class="w-full rounded-lg border border-slate-300 p-3 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+        <button type="button" onclick="importBatchText()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm py-2.5 rounded-lg shadow-sm transition">
+          解析並加入清單
+        </button>
+      </div>
+
+      <!-- 已加入團體清單 -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+            已加入團體清單
+            <span id="group-count-badge" class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+          </h2>
+          <span class="text-[11px] text-slate-400">可排序、編輯或刪除</span>
+        </div>
+        <div id="group-list-container" class="flex flex-col gap-2 max-h-[380px] overflow-y-auto pr-1"></div>
+      </div>
+    </section>
+
+    <!-- 右側 A4 預覽區 -->
+    <section class="lg:col-span-7 w-full">
+      <div class="no-print flex items-center justify-between mb-3 px-1">
+        <h2 class="font-bold text-slate-700 text-sm sm:text-base">A4 列印即時預覽</h2>
+        <span class="text-xs text-slate-500">列印時請選 A4 直向、縮放 100%、無邊界</span>
+      </div>
+      <div id="preview-wrapper" class="preview-scale-wrapper">
+        <div id="print-preview-container" class="w-full flex flex-col items-center"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 自訂 Toast 通知容器 -->
+  <div id="toast-container" class="no-print fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- 自訂確認視窗 Modal（取代原生 confirm） -->
+  <div id="confirm-modal" class="no-print hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl max-w-sm w-full p-5 border border-slate-200">
+      <h3 class="font-bold text-slate-800 text-base mb-2">請確認操作</h3>
+      <p id="confirm-modal-message" class="text-sm text-slate-600 mb-5 leading-relaxed"></p>
+      <div class="flex justify-end gap-2">
+        <button type="button" onclick="closeConfirmModal(false)" class="px-4 py-2 text-xs sm:text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition">
+          取消
+        </button>
+        <button type="button" onclick="closeConfirmModal(true)" class="px-4 py-2 text-xs sm:text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition">
+          確定執行
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // =========================================================================
-    // 1. 狀態定義與預設示範資料（參考用戶原有分枱紙及實拍樣式）
+    // 1. 狀態定義與預設示範資料（首張卡片完全還原用戶實拍樣式）
     // =========================================================================
-    const STORAGE_KEY = 'camp_table_cards_v3';
+    const STORAGE_KEY = 'camp_table_cards_v4';
 
     let groups = [];
     let editingId = null;
@@ -391,8 +538,8 @@
         id: 'demo-1',
         name: '基督教復興教會',
         tag: '',
-        totalTables: 6.5,
-        fullCount: 6,
+        totalTables: 2.5,
+        fullCount: 2,
         halfCount: 1,
         days: [
           { date: '28/11', b: false, l: false, d: true, bbq: false, veg: false, customTables: '' },
@@ -414,7 +561,7 @@
     ];
 
     // =========================================================================
-    // 2. 輔助工具函數（HTML 跳脫、Toast 通知、Modal 確認、儲存）
+    // 2. 輔助工具函數（HTML 跳脫、Toast 通知、Modal 確認、狀態儲存）
     // =========================================================================
     function escapeHtml(str) {
       if (str === null || str === undefined) return '';
@@ -426,8 +573,17 @@
         .replace(/'/g, '&#39;');
     }
 
+    function computeSplit(totalTables) {
+      const num = parseFloat(totalTables);
+      if (isNaN(num) || num <= 0) return { fullCount: 0, halfCount: 0 };
+      const fullCount = Math.floor(num);
+      const hasHalf = (num - fullCount) >= 0.25;
+      return { fullCount, halfCount: hasHalf ? 1 : 0 };
+    }
+
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
+      if (!container) return;
       const toast = document.createElement('div');
       const colorMap = {
         success: 'bg-emerald-600 text-white',
@@ -466,7 +622,7 @@
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({ groups, layoutConfig }));
       } catch (err) {
-        // 沙盒預覽環境可能停用 localStorage，靜默忽略
+        // 沙盒預覽環境可能限制 localStorage，靜默忽略
       }
     }
 
@@ -490,7 +646,7 @@
     }
 
     // =========================================================================
-    // 3. 頁籤與版面控制
+    // 3. 頁籤與版面設定控制
     // =========================================================================
     function switchTab(tab) {
       const formBtn = document.getElementById('tab-btn-form');
@@ -536,12 +692,11 @@
       saveState();
     }
 
-    // 依據瀏覽器預覽欄寬度，自動等比例縮放 A4 頁面（不影響列印尺寸）
     function scalePreviewPages() {
       const wrapper = document.getElementById('preview-wrapper');
       if (!wrapper) return;
       const availableWidth = wrapper.clientWidth - 8;
-      // 210mm 約等於 793.7px (96dpi)
+      // A4 210mm x 297mm 在 96dpi 下約為 793.7px x 1122.5px
       const a4WidthPx = 793.7;
       const a4HeightPx = 1122.5;
       const scale = Math.min(1, Math.max(0.32, availableWidth / a4WidthPx));
@@ -553,6 +708,301 @@
         slot.style.height = `${a4HeightPx * scale}px`;
         page.style.transform = `scale(${scale})`;
       });
+    }
+
+    // =========================================================================
+    // 4. 單筆表單操作（新增日期列、拆枱即時提示、儲存與重設）
+    // =========================================================================
+    function updateSplitPreview() {
+      const val = document.getElementById('group-tables-input').value;
+      const { fullCount, halfCount } = computeSplit(val);
+      const badge = document.getElementById('split-preview-badge');
+
+      if (fullCount === 0 && halfCount === 0) {
+        badge.textContent = '請輸入大於 0 的枱數（例如 4 或 6.5）';
+        return;
+      }
+
+      const parts = [];
+      if (fullCount > 0) parts.push(`${fullCount} 張全圍（限8人）`);
+      if (halfCount > 0) parts.push(`${halfCount} 張半圍（限4人）`);
+      badge.textContent = `將自動生成：${parts.join(' ＋ ')}`;
+    }
+
+    function addDayRow(dayData = null) {
+      const container = document.getElementById('days-container');
+      const row = document.createElement('div');
+      row.className = 'day-row border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col gap-2';
+
+      const dateVal = dayData ? escapeHtml(dayData.date) : '';
+      const customVal = dayData ? escapeHtml(dayData.customTables || '') : '';
+      const checkedB = dayData && dayData.b ? 'checked' : '';
+      const checkedL = dayData && dayData.l ? 'checked' : '';
+      const checkedD = dayData && dayData.d ? 'checked' : '';
+      const checkedBbq = dayData && dayData.bbq ? 'checked' : '';
+      const checkedVeg = dayData && dayData.veg ? 'checked' : '';
+
+      row.innerHTML = `
+        <div class="flex items-center gap-2">
+          <input type="text" class="day-date flex-1 min-w-0 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:outline-none focus:border-brand-500" placeholder="日期（例：24/12）" value="${dateVal}">
+          <input type="text" class="day-custom-tables w-24 rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:border-brand-500" placeholder="個別枱數" title="如當日枱數與總枱數不同可填寫" value="${customVal}">
+          <button type="button" onclick="removeDayRow(this)" title="移除此日" class="px-2 py-1.5 text-xs text-rose-600 hover:bg-rose-50 rounded-md border border-transparent hover:border-rose-200 transition">✕</button>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 text-xs text-slate-700 pt-0.5">
+          <label class="inline-flex items-center gap-1 cursor-pointer select-none">
+            <input type="checkbox" class="day-b accent-brand-600 rounded" ${checkedB}> 早餐
+          </label>
+          <label class="inline-flex items-center gap-1 cursor-pointer select-none">
+            <input type="checkbox" class="day-l accent-brand-600 rounded" ${checkedL}> 午餐
+          </label>
+          <label class="inline-flex items-center gap-1 cursor-pointer select-none">
+            <input type="checkbox" class="day-d accent-brand-600 rounded" ${checkedD}> 晚餐
+          </label>
+          <label class="inline-flex items-center gap-1 cursor-pointer select-none">
+            <input type="checkbox" class="day-bbq accent-brand-600 rounded" ${checkedBbq}> BBQ
+          </label>
+          <label class="inline-flex items-center gap-1 cursor-pointer select-none text-emerald-700 font-medium">
+            <input type="checkbox" class="day-veg accent-emerald-600 rounded" ${checkedVeg}> 素食
+          </label>
+        </div>
+      `;
+      container.appendChild(row);
+    }
+
+    function removeDayRow(btn) {
+      const container = document.getElementById('days-container');
+      if (container.children.length <= 1) {
+        showToast('最少保留一日餐次欄位', 'info');
+        return;
+      }
+      btn.closest('.day-row').remove();
+    }
+
+    function resetForm() {
+      editingId = null;
+      document.getElementById('form-title').textContent = '新增團體分枱紙';
+      document.getElementById('submit-group-btn').textContent = '加入分枱清單';
+      document.getElementById('cancel-edit-btn').classList.add('hidden');
+
+      document.getElementById('group-name-input').value = '';
+      document.getElementById('group-tag-input').value = '';
+      document.getElementById('group-tables-input').value = '4';
+      updateSplitPreview();
+
+      const daysContainer = document.getElementById('days-container');
+      daysContainer.innerHTML = '';
+      addDayRow({ date: '', b: false, l: false, d: true, bbq: false, veg: false, customTables: '' });
+      addDayRow({ date: '', b: true, l: true, d: false, bbq: false, veg: false, customTables: '' });
+    }
+
+    function saveGroup() {
+      const name = document.getElementById('group-name-input').value.trim();
+      const tag = document.getElementById('group-tag-input').value.trim();
+      const totalTablesRaw = document.getElementById('group-tables-input').value;
+      const totalTables = parseFloat(totalTablesRaw);
+
+      if (!name) {
+        showToast('請輸入團體名稱', 'error');
+        document.getElementById('group-name-input').focus();
+        return;
+      }
+      if (isNaN(totalTables) || totalTables <= 0) {
+        showToast('請輸入有效的枱數（例如 4 或 6.5）', 'error');
+        document.getElementById('group-tables-input').focus();
+        return;
+      }
+
+      const days = [];
+      document.querySelectorAll('#days-container .day-row').forEach(row => {
+        const date = row.querySelector('.day-date').value.trim();
+        const customTables = row.querySelector('.day-custom-tables').value.trim();
+        const b = row.querySelector('.day-b').checked;
+        const l = row.querySelector('.day-l').checked;
+        const d = row.querySelector('.day-d').checked;
+        const bbq = row.querySelector('.day-bbq').checked;
+        const veg = row.querySelector('.day-veg').checked;
+
+        if (date || b || l || d || bbq) {
+          days.push({ date, b, l, d, bbq, veg, customTables });
+        }
+      });
+
+      if (days.length === 0) {
+        showToast('請至少填寫一日日期或勾選一個餐次', 'error');
+        return;
+      }
+
+      const { fullCount, halfCount } = computeSplit(totalTables);
+      const groupObj = {
+        id: editingId || `grp-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        name,
+        tag,
+        totalTables,
+        fullCount,
+        halfCount,
+        days
+      };
+
+      if (editingId) {
+        const idx = groups.findIndex(g => g.id === editingId);
+        if (idx !== -1) {
+          groups[idx] = groupObj;
+          showToast(`已更新「${name}」`, 'success');
+        }
+      } else {
+        groups.push(groupObj);
+        showToast(`已新增「${name}」（共 ${fullCount + halfCount} 張卡）`, 'success');
+      }
+
+      saveState();
+      resetForm();
+      renderAll();
+    }
+
+    // =========================================================================
+    // 5. 清單項目編輯、刪除、排序與示範資料控制
+    // =========================================================================
+    function editGroup(id) {
+      const group = groups.find(g => g.id === id);
+      if (!group) return;
+
+      switchTab('form');
+      editingId = group.id;
+      document.getElementById('form-title').textContent = `編輯團體：${group.name}`;
+      document.getElementById('submit-group-btn').textContent = '儲存修改';
+      document.getElementById('cancel-edit-btn').classList.remove('hidden');
+
+      document.getElementById('group-name-input').value = group.name;
+      document.getElementById('group-tag-input').value = group.tag || '';
+      document.getElementById('group-tables-input').value = group.totalTables;
+      updateSplitPreview();
+
+      const daysContainer = document.getElementById('days-container');
+      daysContainer.innerHTML = '';
+      if (group.days && group.days.length > 0) {
+        group.days.forEach(day => addDayRow(day));
+      } else {
+        addDayRow();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteGroup(id) {
+      const group = groups.find(g => g.id === id);
+      if (!group) return;
+      openConfirmModal(`確定要刪除「${group.name}」的分枱紙嗎？`, () => {
+        groups = groups.filter(g => g.id !== id);
+        if (editingId === id) resetForm();
+        saveState();
+        renderAll();
+        showToast(`已刪除「${group.name}」`, 'info');
+      });
+    }
+
+    function moveGroup(idx, direction) {
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= groups.length) return;
+      const temp = groups[idx];
+      groups[idx] = groups[targetIdx];
+      groups[targetIdx] = temp;
+      saveState();
+      renderAll();
+    }
+
+    function confirmLoadDemo() {
+      openConfirmModal('載入示範資料將會覆蓋目前清單，確定繼續嗎？', () => {
+        groups = JSON.parse(JSON.stringify(DEMO_GROUPS));
+        saveState();
+        resetForm();
+        renderAll();
+        showToast('已載入預設示範資料', 'success');
+      });
+    }
+
+    function confirmClearAll() {
+      openConfirmModal('確定要清空清單內所有團體分枱紙嗎？', () => {
+        groups = [];
+        saveState();
+        resetForm();
+        renderAll();
+        showToast('已清空所有資料', 'info');
+      });
+    }
+
+    // =========================================================================
+    // 6. 批量文字匯入解析器
+    // =========================================================================
+    function fillBatchExample() {
+      document.getElementById('batch-textarea').value = [
+        '基督中心堂（荃灣） | 4 | 24/12 晚; 25/12 早午; 26/12 早午',
+        '香港樹仁大學 | 5 | 28/11 晚; 29/11 早',
+        '東華三院大角咀青少年服務中心 | 5.5 | 22/12 晚; 23/12 早午BBQ; 24/12 早',
+        'Dragonfly_2 | 0.5 | 2/12 午晚素; 3/12 早BBQ素 | （西）'
+      ].join('\n');
+    }
+
+    function importBatchText() {
+      const raw = document.getElementById('batch-textarea').value.trim();
+      if (!raw) {
+        showToast('請先輸入或貼上團體資料', 'error');
+        return;
+      }
+
+      const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      let addedCount = 0;
+
+      lines.forEach(line => {
+        const parts = line.split('|').map(p => p.trim());
+        if (parts.length < 3) return;
+
+        const name = parts[0];
+        const totalTables = parseFloat(parts[1]);
+        const daysStr = parts[2];
+        const tag = parts[3] ? parts[3].replace(/\\n/g, '\n') : '';
+
+        if (!name || isNaN(totalTables) || totalTables <= 0) return;
+
+        const dayChunks = daysStr.split(/[;；]/).map(s => s.trim()).filter(Boolean);
+        const days = dayChunks.map(chunk => {
+          const dateMatch = chunk.match(/\d{1,2}\/\d{1,2}/);
+          const date = dateMatch ? dateMatch[0] : '';
+          const lower = chunk.toLowerCase();
+          return {
+            date,
+            b: chunk.includes('早'),
+            l: chunk.includes('午'),
+            d: chunk.includes('晚'),
+            bbq: lower.includes('bbq') || chunk.includes('燒烤'),
+            veg: chunk.includes('素'),
+            customTables: ''
+          };
+        }).filter(d => d.date || d.b || d.l || d.d || d.bbq);
+
+        if (days.length === 0) return;
+
+        const { fullCount, halfCount } = computeSplit(totalTables);
+        groups.push({
+          id: `batch-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+          name,
+          tag,
+          totalTables,
+          fullCount,
+          halfCount,
+          days
+        });
+        addedCount++;
+      });
+
+      if (addedCount === 0) {
+        showToast('未能解析任何有效資料，請檢查是否使用 | 分隔', 'error');
+        return;
+      }
+
+      document.getElementById('batch-textarea').value = '';
+      saveState();
+      renderAll();
+      showToast(`成功匯入 ${addedCount} 個團體！`, 'success');
     }
 
     // =========================================================================
@@ -598,7 +1048,6 @@
         tagLines.forEach(t => badges.push(t));
       }
 
-      // 結合半圍與括號標記，例如 （半圍）（西）
       let badgesHtml = '';
       if (badges.length > 0) {
         if (card.isHalf && card.tag && (card.tag.startsWith('(') || card.tag.startsWith('（'))) {
@@ -748,7 +1197,7 @@
         groups = JSON.parse(JSON.stringify(DEMO_GROUPS));
       }
 
-      // 同步控制項 UI 與當前 layoutConfig
+      // 同步控制列與目前版面設定
       document.getElementById('layout-grid-select').value = layoutConfig.gridClass;
       document.getElementById('layout-border-select').value = layoutConfig.borderClass;
       document.getElementById('layout-font-select').value = layoutConfig.fontClass || 'font-kaiti';
